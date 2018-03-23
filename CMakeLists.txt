@@ -16,12 +16,6 @@ HunterGate(
 
 project(SqliteModernCpp)
 
-hunter_add_package(Catch)
-hunter_add_package(sqlite3)
-
-find_package(Catch CONFIG REQUIRED)
-find_package(sqlite3 CONFIG REQUIRED)
-
 set(TEST_SOURCE_DIR             ${CMAKE_SOURCE_DIR}/tests)
 file(GLOB TEST_SOURCES          ${TEST_SOURCE_DIR}/*.cc)
 
@@ -29,20 +23,12 @@ IF(NOT ENABLE_SQLCIPHER_TESTS)
     list(REMOVE_ITEM TEST_SOURCES ${TEST_SOURCE_DIR}/sqlcipher.cc)
 ENDIF(NOT ENABLE_SQLCIPHER_TESTS)
 
-enable_testing()
-
 add_library (sqlite_modern_cpp INTERFACE)
 target_include_directories(sqlite_modern_cpp INTERFACE hdr/)
 
-add_executable(tests ${TEST_SOURCES})
-target_include_directories(tests INTERFACE ${SQLITE3_INCLUDE_DIRS})
-if(ENABLE_SQLCIPHER_TESTS)
-    target_link_libraries(tests Catch::Catch sqlite_modern_cpp sqlite3::sqlite3 -lsqlcipher)
-else()
-    target_link_libraries(tests Catch::Catch sqlite_modern_cpp sqlite3::sqlite3)
-endif()
-
-catch_discover_tests(tests)
+IF(HUNTER_ENABLED)
+    add_subdirectory(tests)
+ENDIF()
 
 # Place the file in the source directory, permitting us to place a single configuration file for YCM there.
 # YCM is the code-completion engine for (neo)vim https://github.com/Valloric/YouCompleteMe
