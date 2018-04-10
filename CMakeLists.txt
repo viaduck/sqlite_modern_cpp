@@ -5,14 +5,16 @@ OPTION(ENABLE_SQLCIPHER_TESTS "enable sqlchipher test")
 SET(CMAKE_EXPORT_COMPILE_COMMANDS ON)
 set (CMAKE_CXX_STANDARD 14)
 
-set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} "${CMAKE_SOURCE_DIR}/cmake")
-include("cmake/HunterGate.cmake")
-include("cmake/Catch.cmake")
+IF(HUNTER_ENABLED)
+    set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} "${CMAKE_SOURCE_DIR}/cmake")
+    include("cmake/HunterGate.cmake")
+    include("cmake/Catch.cmake")
 
-HunterGate(
-    URL "https://github.com/ruslo/hunter/archive/v0.19.227.tar.gz"
-    SHA1 "808b778a443fcdf19c2d18fea8fa4bb59d16596a"
-)
+    HunterGate(
+        URL "https://github.com/ruslo/hunter/archive/v0.19.227.tar.gz"
+        SHA1 "808b778a443fcdf19c2d18fea8fa4bb59d16596a"
+    )
+ENDIF()
 
 project(SqliteModernCpp)
 
