@@ -1,9 +1,6 @@
 #pragma once
 
-#ifndef SQLITE_HAS_CODEC
-#define SQLITE_HAS_CODEC
-#endif
-
+#include <cryptosqlite/cryptosqlite.h>
 #include "../sqlite_modern_cpp.h"
 
 namespace sqlite {
@@ -13,19 +10,21 @@ namespace sqlite {
 
 	class cryptosqlite_database : public database {
 	public:
-		cryptosqlite_database(std::string db, const cryptosqlite_config &config):
-				database(db, prepare_config(db, config)) {
+		cryptosqlite_database(const std::string &db_name, const cryptosqlite_config &config):
+				database(db_name, prepare_config(config)) {
 
 			if(auto ret = sqlite3_key(_db.get(), config.key.data(), config.key.size()))
 				errors::throw_sqlite_error(ret);
+
+			*this << "PRAGMA schema_version";
 		}
 
 		// TODO: add utf16 support
 
 	private:
-		// workaround for decrypting the sqlite3 header before the base constructor calls sqlite3_open
-		const cryptosqlite_config &prepare_config(const std::string &db, const cryptosqlite_config &config) {
-			sqlite3_prepare_open_encrypted(db.c_str(), config.key.c_str(), config.key.size());
+		// workaround preparing the sqlite3_open before the base constructor calls it
+		const cryptosqlite_config &prepare_config(const cryptosqlite_config &config) {
+			sqlite3_prepare_open_encrypted();
 			return config;
 		}
 
