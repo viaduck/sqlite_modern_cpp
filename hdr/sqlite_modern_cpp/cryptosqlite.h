@@ -15,8 +15,6 @@ namespace sqlite {
 
 			if(auto ret = sqlite3_key(_db.get(), config.key.data(), config.key.size()))
 				errors::throw_sqlite_error(ret);
-
-			*this << "PRAGMA schema_version";
 		}
 
 		// TODO: add utf16 support
