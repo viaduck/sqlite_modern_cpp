@@ -22,7 +22,7 @@ namespace sqlite {
 	private:
 		// workaround preparing the sqlite3_open before the base constructor calls it
 		const cryptosqlite_config &prepare_config(const cryptosqlite_config &config) {
-			sqlite3_prepare_open_encrypted();
+			sqlite3_prepare_open_encrypted(config.key.data(), config.key.size());
 			return config;
 		}
 
