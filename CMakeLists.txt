@@ -1,4 +1,4 @@
-cmake_minimum_required(VERSION 3.0)
+cmake_minimum_required(VERSION 3.0...3.27)
 OPTION(ENABLE_SQLCIPHER_TESTS "enable sqlchipher test")
 
 # Creates the file compile_commands.json in the build directory.
